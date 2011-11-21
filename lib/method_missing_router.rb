@@ -30,9 +30,7 @@ module MethodMissingRouter
 
     def method_missing(meth, *args, &block)
       @class_method_missing_routes.each do |matcher, target|
-        if matcher =~ meth
-          return self.send(target, *args, &block)
-        end
+        return self.send(target, *args, &block) if matcher =~ meth
       end
       super(meth, *args, &block)
     end

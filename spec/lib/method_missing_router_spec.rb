@@ -27,7 +27,7 @@ describe MethodMissingRouter do
       test_class.should_receive(:lowercase_message)
 
       test_class.fish_powers_activate
-      test_class.lowercase
+      test_class.somelowercaseletters
     end
 
     it 'passes undeclared messages to super' do
