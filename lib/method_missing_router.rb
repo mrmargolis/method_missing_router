@@ -1,17 +1,18 @@
 require "method_missing_router/version"
+
 module MethodMissingRouter
   def self.included(base)
-    base.extend(Routing)
-    base.send(:include, Routing)
+    base.extend(MethodMissing)
+    base.send(:include, MethodMissing)
     base.extend(ClassMethods)
     base.reset_method_missing_routes!
   end
 
 
-  module Routing
+  module MethodMissing
     def method_missing_routes
       if self.kind_of?(Class)
-        @class_method_missing_routes
+        self.instance_variable_get("@class_method_missing_routes")
       else 
         self.class.instance_variable_get("@method_missing_routes")
       end
