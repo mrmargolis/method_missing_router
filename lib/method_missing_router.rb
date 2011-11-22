@@ -9,6 +9,7 @@ module MethodMissingRouter
 
   def method_missing(meth, *args, &block)
     self.class.instance_variable_get("@method_missing_routes").each do |matcher, target|
+      args.unshift(meth)
       return self.send(target, *args, &block) if matcher =~ meth
     end
     super(meth, *args, &block)
@@ -30,6 +31,7 @@ module MethodMissingRouter
 
     def method_missing(meth, *args, &block)
       @class_method_missing_routes.each do |matcher, target|
+        args.unshift(meth)
         return self.send(target, *args, &block) if matcher =~ meth
       end
       super(meth, *args, &block)

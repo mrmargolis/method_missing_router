@@ -30,6 +30,12 @@ describe MethodMissingRouter do
       test_class.somelowercaseletters
     end
 
+    it 'passes the original message name as the first argument' do
+      test_class.class_route_missing(/^fire\_the\_/, :fire_weapon)
+      test_class.should_receive(:fire_weapon).with(:fire_the_lazer, {:power => 11})
+      test_class.fire_the_lazer(:power => 11)
+    end
+
     it 'passes undeclared messages to super' do
       expect{test_class.something_unexpected}.to raise_error(NoMethodError)
     end
@@ -55,6 +61,12 @@ describe MethodMissingRouter do
 
       test_instance.cowsplode
       test_instance.pudding_in_a_bag
+    end
+
+    it 'passes the original message name as the first argument' do
+      test_class.route_missing(/^fire\_the\_/, :fire_weapon)
+      test_instance.should_receive(:fire_weapon).with(:fire_the_lazer, {:power => 11})
+      test_instance.fire_the_lazer(:power => 11)
     end
 
     it 'passes undeclared messages to super' do
