@@ -3,8 +3,6 @@ module MethodMissingRouter
   def self.included(base)
     base.extend(ClassMethods)
     base.reset_method_missing_routes!
-    base.instance_variable_set("@class_method_missing_routes", [])
-    base.instance_variable_set("@method_missing_routes", [])
   end
 
   def method_missing(meth, *args, &block)
