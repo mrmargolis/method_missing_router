@@ -36,13 +36,13 @@ describe MethodMissingRouter do
       test_class.fire_the_lazer(:power => 11)
     end
 
-    it 'passes the regex match as the first argument when pass_regex_match option is set' do
+    it 'passes the regex match as the first argument when pass_match option is set' do
       test_class.class_route_missing(/^fire\_the\_(.+)/, :fire_weapon, :pass_match => true)
       test_class.should_receive(:fire_weapon).with('lazer', {:power => 11})
       test_class.fire_the_lazer(:power => 11)
     end
 
-    it 'passes all regex matches as the first argument when pass_regex_matches option is set' do
+    it 'passes all regex matches as the first argument when pass_matches option is set' do
       test_class.class_route_missing(/^fire\_the\_(.+)\_and\_(.+)/, :fire_weapon, :pass_matches => true)
       test_class.should_receive(:fire_weapon).with(['lazer', 'canon'], {:power => 11})
       test_class.fire_the_lazer_and_canon(:power => 11)

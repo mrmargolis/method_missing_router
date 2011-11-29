@@ -11,9 +11,9 @@ module MethodMissingRouter
 
   module MethodMissing
     def method_missing(method_name, *args, &block)
-      call = Call.new(self, method_name, *args, &block)
+      call_info = CallInfo.new(self, method_name, *args, &block)
       method_missing_routes.each do |route|
-        return route.run(call) if route.applies_to?(call.method_name)
+        return route.run(call_info) if route.applies_to?(call_info.method_name)
       end
       super(method_name, *args, &block)
     end
@@ -54,30 +54,34 @@ module MethodMissingRouter
       @regex =~ method_name
     end
 
-    def run(call)
-      call.args.unshift(message_for(call.method_name))
-      return call.object.send(@target, *call.args, &call.block)
+    def run(call_info)
+      call_info.prepend_argument(message_for(call_info.method_name))
+      return call_info.object.send(@target, *call_info.args, &call_info.block)
     end
 
     def message_for(method_name)
-      matches = @regex.match(method_name).captures
+      captures = @regex.match(method_name).captures
       if @options[:pass_matches]
-        return matches
+        return captures
       elsif @options[:pass_match]
-        return matches.first 
+        return captures.first 
       else
         return method_name.to_s
       end
     end
   end
 
-  class Call
+  class CallInfo
     attr_accessor :object, :method_name, :args, :block
     def initialize(object, method_name, *args, &block)
       @object = object
       @method_name = method_name
       @args = args
       @block = block
+    end
+
+    def prepend_argument(new_arg)
+      @args.unshift(new_arg)
     end
   end
 end
